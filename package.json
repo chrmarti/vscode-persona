@@ -20,7 +20,16 @@
 				"command": "persona.applySettings",
 				"title": "Apply Settings"
 			}
-		]
+		],
+		"configuration": {
+			"title": "Persona",
+			"properties": {
+				"persona.appliedVersion": {
+					"type": "string",
+					"description": "GitHub Gist version previously applied. Do not change manually."
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "yarn run compile",
