@@ -35,18 +35,17 @@ async function applySettings() {
 		return;
 	}
 	
-	const previousSettings = previousVersion && (await getGistSettings(gistId, previousVersion)).settings || undefined;
+	const previousSettings = previousVersion && (await getGistSettings(previousVersion)).settings || undefined;
 
 	await mergeSettings(config, settings, previousSettings);
 	await config.update(appliedVersionKey, version, ConfigurationTarget.Global);
 }
 
-async function getGistSettings(id: string, sha?: string) {
-	const shaSegment = sha ? `/${sha}` : '';
-	const buf = await httpsGet(`https://api.github.com/gists/${id}${shaSegment}`);
+async function getGistSettings(idOrVersion: string) {
+	const buf = await httpsGet(`https://api.github.com/gists/${idOrVersion}`);
 	const gist = JSON.parse(buf.toString()) as Gist;
 	const settings = JSON.parse(gist.files['settings.json'].content);
-	const version = gist.history[0].version;
+	const version = `${gist.id}/${gist.history[0].version}`;
 	return { settings, version };
 }
 
