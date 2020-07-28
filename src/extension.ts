@@ -21,27 +21,24 @@ const gistId = 'eafc6c48f8de6a6f4703ad4f4697cb53';
 
 const appliedVersionKey = 'persona.appliedVersion';
 
-export function activate(context: ExtensionContext) {
+export async function activate() {
+	await applySettings();
+}
 
-	console.log('Congratulations, your extension "Persona" is now active!');
+async function applySettings() {
+	const config = workspace.getConfiguration();
+	const previousVersion = config.get<string>(appliedVersionKey);
+	
+	const { settings, version } = await getGistSettings(gistId);
+	if (version === previousVersion) {
+		console.log('Persona: Nothing to do.');
+		return;
+	}
+	
+	const previousSettings = previousVersion && (await getGistSettings(gistId, previousVersion)).settings || undefined;
 
-	context.subscriptions.push(
-		commands.registerCommand('persona.applySettings', async () => {
-			const config = workspace.getConfiguration();
-			const previousVersion = config.get<string>(appliedVersionKey);
-			
-			const { settings, version } = await getGistSettings(gistId);
-			if (version === previousVersion) {
-				console.log('Persona: Nothing to do.');
-				return;
-			}
-			
-			const previousSettings = previousVersion && (await getGistSettings(gistId, previousVersion)).settings || undefined;
-
-			await mergeSettings(config, settings, previousSettings);
-			await config.update(appliedVersionKey, version, ConfigurationTarget.Global);
-		})
-	);
+	await mergeSettings(config, settings, previousSettings);
+	await config.update(appliedVersionKey, version, ConfigurationTarget.Global);
 }
 
 async function getGistSettings(id: string, sha?: string) {

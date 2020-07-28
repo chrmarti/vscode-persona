@@ -10,23 +10,16 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:persona.applySettings"
+		"onStartupFinished"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
-		"commands": [
-			{
-				"category": "Persona",
-				"command": "persona.applySettings",
-				"title": "Apply Settings"
-			}
-		],
 		"configuration": {
 			"title": "Persona",
 			"properties": {
 				"persona.appliedVersion": {
 					"type": "string",
-					"description": "GitHub Gist version previously applied. Do not change manually."
+					"description": "GitHub Gist version applied. There is usually no need to change this manually."
 				}
 			}
 		}
