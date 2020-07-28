@@ -10,14 +10,15 @@
 		"Other"
 	],
 	"activationEvents": [
-        "onCommand:persona.helloWorld"
+		"onCommand:persona.applySettings"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "persona.helloWorld",
-				"title": "Hello World"
+				"category": "Persona",
+				"command": "persona.applySettings",
+				"title": "Apply Settings"
 			}
 		]
 	},
