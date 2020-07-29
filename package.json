@@ -2,6 +2,7 @@
 	"name": "persona",
 	"displayName": "VS Code Persona",
 	"description": "Updated default settings for VS Code.",
+	"icon": "images/icon.png",
 	"publisher": "chrmarti",
 	"version": "0.0.1",
 	"repository": {
