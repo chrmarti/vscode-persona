@@ -15,10 +15,18 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onStartupFinished"
+		"onStartupFinished",
+		"onCommand:persona.removeSettings"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
+		"commands": [
+			{
+				"category": "Persona",
+				"command": "persona.removeSettings",
+				"title": "Remove Settings..."
+			}
+		],
 		"configuration": {
 			"title": "Persona",
 			"properties": {
