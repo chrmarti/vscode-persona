@@ -8,6 +8,7 @@ import * as https from 'https';
 import { ConfigurationTarget, ExtensionContext, commands, workspace, WorkspaceConfiguration, window, env, Uri } from 'vscode';
 
 interface Gist {
+	url: string;
 	id: string;
 	html_url: string;
 	files: Record<string, GistFile>;
@@ -20,10 +21,11 @@ interface GistFile {
 }
 
 interface GistHistory {
+	url: string;
 	version: string;
 }
 
-const gistId = 'eafc6c48f8de6a6f4703ad4f4697cb53';
+const gistUrl = 'https://api.github.com/gists/eafc6c48f8de6a6f4703ad4f4697cb53';
 
 const appliedVersionKey = 'persona.appliedVersion';
 
@@ -36,7 +38,7 @@ export async function activate(context: ExtensionContext) {
 }
 
 async function applyCurrentSettings() {
-	const { settings, version } = await getGistSettings(gistId);
+	const { settings, version } = await getGistSettings(gistUrl);
 	await applySettings(settings, version);
 }
 
@@ -78,11 +80,11 @@ async function applySettings(settings: any, version: string | undefined) {
 	await config.update(appliedVersionKey, version, ConfigurationTarget.Global);
 }
 
-async function getGistSettings(idOrVersion: string) {
-	const buf = await httpsGet(`https://api.github.com/gists/${idOrVersion}`);
+async function getGistSettings(url: string) {
+	const buf = await httpsGet(url);
 	const gist = JSON.parse(buf.toString()) as Gist;
 	const settings = JSON.parse(gist.files['settings.json'].content);
-	const version = `${gist.id}/${gist.history[0].version}`;
+	const version = gist.history[0].url;
 	const { html_url } = gist;
 	return { settings, version, html_url };
 }
