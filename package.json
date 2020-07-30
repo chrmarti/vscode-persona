@@ -15,6 +15,9 @@
 	"categories": [
 		"Other"
 	],
+	"extensionKind": [
+		"ui"
+	],
 	"activationEvents": [
 		"onStartupFinished",
 		"onCommand:persona.removeSettings"
