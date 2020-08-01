@@ -27,6 +27,7 @@ interface GistHistory {
 
 const applySettingsKey = 'persona.applySettings';
 const appliedVersionKey = 'persona.appliedVersion';
+const preserveSettingsKey = 'persona.preserveSettings';
 
 export async function activate(context: ExtensionContext) {
 	await applyCurrentSettings();
@@ -90,24 +91,33 @@ async function getGistSettings(url: string) {
 	return { settings, version, html_url };
 }
 
-async function mergeSettings(config: WorkspaceConfiguration, settings: any = {}, previousSettings: any = {}) {
+async function mergeSettings(config: WorkspaceConfiguration, newSettings: any = {}, previousSettings: any = {}) {
+	const settings: any = { ...newSettings };
+	for (const key in previousSettings) {
+		if (!(key in newSettings)) {
+			settings[key] = undefined;
+		}
+	}
+
+	const preserveSettings = config.get<string[]>(preserveSettingsKey) || [];
 	for (const key in settings) {
 		const currentValue = config.inspect(key)?.globalValue;
 		const previousValue = previousSettings[key];
-		if (currentValue === previousValue) {
-			const value = settings[key];
-			await config.update(key, value, ConfigurationTarget.Global);
-		}
-	}
-	for (const key in previousSettings) {
-		if (!(key in settings)) {
-			const currentValue = config.inspect(key)?.globalValue;
-			const previousValue = previousSettings[key];
+		const newValue = settings[key];
+		if (newValue !== previousValue) {
+			const i = preserveSettings.indexOf(key);
 			if (currentValue === previousValue) {
-				await config.update(key, undefined, ConfigurationTarget.Global);
+				if (i === -1) {
+					await config.update(key, newValue, ConfigurationTarget.Global);
+				} else {
+					preserveSettings.splice(i, 1);
+				}
+			} else if (currentValue === newValue && i === -1) {
+				preserveSettings.push(key);
 			}
 		}
 	}
+	await config.update(preserveSettingsKey, preserveSettings.length ? preserveSettings : undefined, ConfigurationTarget.Global);
 }
 
 async function httpsGet(url: string) {

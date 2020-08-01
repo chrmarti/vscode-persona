@@ -42,6 +42,11 @@
 				"persona.appliedVersion": {
 					"type": "string",
 					"description": "GitHub Gist version applied. There is usually no need to change this manually."
+				},
+				"persona.preserveSettings": {
+					"type": "array",
+					"description": "List of settings that were set by the user and should be preserved when removing settings. This is managed by the extension and may be changed manually.",
+					"default": []
 				}
 			}
 		}
