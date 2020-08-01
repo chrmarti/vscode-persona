@@ -34,6 +34,11 @@
 		"configuration": {
 			"title": "Persona",
 			"properties": {
+				"persona.applySettings": {
+					"type": "string",
+					"description": "GitHub Gist to read the settings from.",
+					"default": "https://api.github.com/gists/eafc6c48f8de6a6f4703ad4f4697cb53"
+				},
 				"persona.appliedVersion": {
 					"type": "string",
 					"description": "GitHub Gist version applied. There is usually no need to change this manually."

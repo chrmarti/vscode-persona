@@ -25,8 +25,7 @@ interface GistHistory {
 	version: string;
 }
 
-const gistUrl = 'https://api.github.com/gists/eafc6c48f8de6a6f4703ad4f4697cb53';
-
+const applySettingsKey = 'persona.applySettings';
 const appliedVersionKey = 'persona.appliedVersion';
 
 export async function activate(context: ExtensionContext) {
@@ -38,7 +37,9 @@ export async function activate(context: ExtensionContext) {
 }
 
 async function applyCurrentSettings() {
-	const { settings, version } = await getGistSettings(gistUrl);
+	const config = workspace.getConfiguration();
+	const currentVersion = config.inspect<string>(applySettingsKey)!;
+	const { settings, version } = await getGistSettings(currentVersion.globalValue?.trim() || currentVersion.defaultValue!);
 	await applySettings(settings, version);
 }
 
