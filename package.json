@@ -28,7 +28,7 @@
 			{
 				"category": "Persona",
 				"command": "persona.removeSettings",
-				"title": "Remove Settings..."
+				"title": "Remove Settings"
 			}
 		],
 		"configuration": {

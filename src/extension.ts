@@ -53,18 +53,9 @@ async function removeSettings() {
 		return;
 	}
 
-	const removeSettings = 'Remove Settings';
-	const showAppliedSettings = 'Show Applied Settings';
-	const message = 'If one of your personal settings happends to be equal to the currently applied setting, that setting will be removed too.';
-	const result = await window.showWarningMessage(message, { modal: true }, removeSettings, showAppliedSettings);
-	if (result === removeSettings) {
-		await applySettings({}, undefined);
-		const message = 'Done. You might want to uninstall the Persona extension to avoid having the settings reapplied when VS Code starts.';
-		await window.showInformationMessage(message, { modal: true });
-	} else if (result === showAppliedSettings) {
-		const gist = await getGistSettings(previousVersion);
-		await env.openExternal(Uri.parse(gist.html_url));
-	}
+	await applySettings({}, undefined);
+	const message = 'Done. You might want to uninstall the Persona extension to avoid having the settings reapplied when VS Code starts.';
+	await window.showInformationMessage(message, { modal: true });
 }
 
 async function applySettings(settings: any, version: string | undefined) {
@@ -106,14 +97,12 @@ async function mergeSettings(config: WorkspaceConfiguration, newSettings: any = 
 		const newValue = settings[key];
 		if (newValue !== previousValue) {
 			const i = preserveSettings.indexOf(key);
-			if (currentValue === previousValue) {
-				if (i === -1) {
-					await config.update(key, newValue, ConfigurationTarget.Global);
-				} else {
-					preserveSettings.splice(i, 1);
-				}
+			if (currentValue === previousValue && i === -1) {
+				await config.update(key, newValue, ConfigurationTarget.Global);
 			} else if (currentValue === newValue && i === -1) {
 				preserveSettings.push(key);
+			} else if (currentValue !== newValue && i !== -1) {
+				preserveSettings.splice(i, 1);
 			}
 		}
 	}
