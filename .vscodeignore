@@ -5,3 +5,4 @@ src/**
 **/.eslintrc.json
 **/*.map
 **/*.ts
+images/in_action.gif

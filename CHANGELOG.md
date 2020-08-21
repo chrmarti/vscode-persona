@@ -2,6 +2,11 @@
 
 Notable changes.
 
+## 0.0.3
+
+- Use correct branch for images.
+- Do not include README image.
+
 ## 0.0.2
 
 - Setting `persona.applySettings` to use a different Gist to read the settings from.
